@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Dashboard</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .sidebar-transition {
+            transition: transform 0.3s ease;
+        }
+        .active {
+            background-color: #2563eb;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-blue-900 text-white transform -translate-x-full md:translate-x-0 sidebar-transition z-30 p-5">
+            <h1 class="text-3xl font-bold mb-6 text-center">Dashboard</h1>
+            <nav class="space-y-4">
+                <a href="#" class="block py-2 px-3 hover:bg-blue-700 rounded transition active">🏠 Home</a>
+                <a href="#" class="block py-2 px-3 hover:bg-blue-700 rounded transition">📊 Analytics</a>
+                <a href="#" class="block py-2 px-3 hover:bg-blue-700 rounded transition">⚙️ Settings</a>
+                <a href="#" class="block py-2 px-3 hover:bg-blue-700 rounded transition">🚪 Logout</a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col md:pl-64 transition-all duration-300">
+            <!-- Navbar -->
+            <header class="bg-white shadow-md py-4 px-6 flex justify-between items-center">
+                <button id="menu-btn" class="md:hidden text-gray-700 focus:outline-none">☰</button>
+                <h2 class="text-xl font-bold">Dashboard Overview</h2>
+                <div class="flex items-center space-x-4">
+                    <input type="text" placeholder="Search..." class="border rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-300">
+                    
+                    <!-- Notification Icon -->
+                    <div class="relative cursor-pointer">
+                        <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">3</span>
+                        🔔
+                    </div>
+                    
+                    <!-- User Dropdown -->
+                    <div class="relative">
+                        <img src="user.png" alt="User" class="w-10 h-10 rounded-full cursor-pointer" id="user-menu-btn">
+                        <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-md hidden">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-200">Profile</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-200">Settings</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-200">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <main class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-blue-600 p-6 rounded-lg shadow hover:shadow-lg transition duration-300 text-white">
+                    <h3 class="text-xl font-semibold">💰 Revenue</h3>
+                    <p class="text-3xl font-bold count" data-target="50000">$0</p>
+                </div>
+                <div class="bg-green-600 p-6 rounded-lg shadow hover:shadow-lg transition duration-300 text-white">
+                    <h3 class="text-xl font-semibold">👥 Users</h3>
+                    <p class="text-3xl font-bold count" data-target="1200">0</p>
+                </div>
+                <div class="bg-red-600 p-6 rounded-lg shadow hover:shadow-lg transition duration-300 text-white">
+                    <h3 class="text-xl font-semibold">📦 Sales</h3>
+                    <p class="text-3xl font-bold count" data-target="350">0</p>
+                </div>
+                <div class="bg-yellow-600 p-6 rounded-lg shadow hover:shadow-lg transition duration-300 text-white">
+                    <h3 class="text-xl font-semibold">📈 Growth</h3>
+                    <p class="text-3xl font-bold count" data-target="12">0%</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userMenu = document.getElementById('user-menu');
+        
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+        
+        document.addEventListener('click', (event) => {
+            if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
+                sidebar.classList.add('-translate-x-full');
+            }
+        });
+        
+        userMenuBtn.addEventListener('click', () => {
+            userMenu.classList.toggle('hidden');
+        });
+        
+        document.addEventListener('click', (event) => {
+            if (!userMenu.contains(event.target) && !userMenuBtn.contains(event.target)) {
+                userMenu.classList.add('hidden');
+            }
+        });
+        
+        // Number Counter Animation
+        document.querySelectorAll('.count').forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                let count = 0;
+                const increment = target / 100;
+                
+                const countUp = setInterval(() => {
+                    count += increment;
+                    if (count >= target) {
+                        counter.innerText = target;
+                        clearInterval(countUp);
+                    } else {
+                        counter.innerText = Math.floor(count);
+                    }
+                }, 30);
+            };
+            updateCount();
+        });
+    </script>
+</body>
+</html>
